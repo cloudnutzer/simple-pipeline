@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-world-deployment
+  name: webapp-deployment
 spec:
+  replicas: 3
   selector:
     matchLabels:
-      app: hello-world
-  replicas: 3
+      app: webapp
   template:
     metadata:
       labels:
-        app: hello-world
+        app: webapp
     spec:
       containers:
-      - name: hello-world
-        image: cloudnutzer/index-html
+      - name: webapp
+        image: cloudnutzer/index-html:latest
         ports:
-        - containerPort: 80
+        - containerPort: 8080
 
