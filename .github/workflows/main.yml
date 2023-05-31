@@ -1,45 +1,39 @@
-name: CI/CD Pipeline
+name: Deploy to Kubernetes
 
 on:
   push:
     branches:
-      - main
-
-env:
-  IMAGE_NAME: index-html # replace with the name of your Docker image
-  IMAGE_TAG: ${{ github.sha }} # tag the image with the current commit SHA
-  KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG }} # the name of the secret containing your kubeconfig
-  DEPLOYMENT_FILE: deployment.yaml # replace with the path to your Kubernetes deployment file
+      - master
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+    - name: Build Docker image
+      run: |
+        docker build -t cloudnutzer/index-html:latest .
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }} # replace with the name of the secret containing your Docker Hub username
-          password: ${{ secrets.DOCKER_PASSWORD }} # replace with the name of the secret containing your Docker Hub password
+    - name: Log in to Docker Hub
+      run: |
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} # replace DOCKER_USERNAME with your Docker Hub username
+    - name: Push Docker image
+      run: |
+        docker push cloudnutzer/index-html:latest
 
-      - name: Set up kubeconfig
-        run: |
-          echo "${{ env.KUBECONFIG_CONTENT }}" > kubeconfig
-          export KUBECONFIG=kubeconfig
+    - name: Set up kubeconfig
+      run: |
+        echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
+        export KUBECONFIG=kubeconfig.yaml
 
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl apply -f ${{ env.DEPLOYMENT_FILE }}
+    - name: Deploy Deployment to Kubernetes
+      run: |
+        kubectl apply -f deployment.yaml
+
+    - name: Deploy Service to Kubernetes
+      run: |
+        kubectl apply -f service.yaml
