@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: hello-world
-        image: IMAGE_NAME
+        image: cloudnutzer/index-html
         ports:
         - containerPort: 80
 
