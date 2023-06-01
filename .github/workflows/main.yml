@@ -3,37 +3,42 @@ name: Deploy to Kubernetes
 on:
   push:
     branches:
-      - master
+      - main
+  workflow_dispatch: # This enables manual triggering
+
+env:
+  IMAGE_NAME: cloudnutzer/index-html
+  KUBECONFIG_FILE: kubeconfig.yaml
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Build Docker image
-      run: |
-        docker build -t cloudnutzer/index-html:latest .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-    - name: Log in to Docker Hub
-      run: |
-        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
-    - name: Push Docker image
-      run: |
-        docker push cloudnutzer/index-html:latest
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}
 
-    - name: Set up kubeconfig
-      run: |
-        echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
-        export KUBECONFIG=kubeconfig.yaml
+      - name: Set up kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 --decode > ${{ env.KUBECONFIG_FILE }}
+          echo "KUBECONFIG=$(pwd)/${{ env.KUBECONFIG_FILE }}" >> $GITHUB_ENV
 
-    - name: Deploy Deployment to Kubernetes
-      run: |
-        kubectl apply -f deployment.yaml
-
-    - name: Deploy Service to Kubernetes
-      run: |
-        kubectl apply -f service.yaml
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
