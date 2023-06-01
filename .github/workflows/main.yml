@@ -37,6 +37,10 @@ jobs:
         run: |
           echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 --decode > ${{ env.KUBECONFIG_FILE }}
           echo "KUBECONFIG=$(pwd)/${{ env.KUBECONFIG_FILE }}" >> $GITHUB_ENV
+      
+      - name: Delete existing deployment
+        run: |
+          kubectl delete deployment webapp-deployment --ignore-not-found
 
       - name: Deploy to Kubernetes
         run: |
