@@ -8,4 +8,7 @@
 
 # Weitere Befehle:
 * watch -n 1 "kubectl get pods -o wide"
+* kubectl get deployment
+* kubectl delete deployment webapp-deployment
+* kubectl get services
 
