@@ -41,6 +41,6 @@
   * the pipeline build a new version of the container
   * uploads the new image to the registry
   * the pipeline deploys the new version of the containter image in your aks cluster
-  * you can show the termination and redeploying of the container by the cli watch command: watch -n 1 ''' "kubectl get pods -o wide" '''
+  * you can show the termination and redeploying of the container by the cli watch command: watch -n 1 ``` kubectl get pods -o wide ```
 
 
