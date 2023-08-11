@@ -43,4 +43,11 @@
   * the pipeline deploys the new version of the containter image in your aks cluster
   * you can show the termination and redeploying of the container by the cli watch command: ``` watch -n 1 "kubectl get pods -o wide" ```
 
+## In case you just deployed a fresh AKS cluster:
+* Download the kubeconfig file
+* Map the new AKS cnfig to kubectl (example): ``` export KUBECONFIG=/Users/awesomeuser/folder/kubeconfig-aks ```
+* check if you can check status etc. (example):
+  * ``` kubectl get nodes ```
+  * To get the public IP of the LoadBalancer for accessing the index.html ``` kubectl get services ```
+
 
