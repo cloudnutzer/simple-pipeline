@@ -29,9 +29,9 @@
 
 ## Use AKS Cluster Kubeconfig text converted to base64 as a variable in Github:
 * Command to read the AKS kubeconfig file in Azure and then download locally:
-  * az aks get-credentials --resource-group <rg-name> --name <aks-name> --file kubeconfig-aks
+  * ``` az aks get-credentials --resource-group <rg-name> --name <aks-name> --file kubeconfig-aks ```
 * Encode the local Kubeconfig File in Base64 and copy to the clipboard:
-  * cat kubeconfig-aks | base64 | pbcopy
+  * ``` cat kubeconfig-aks | base64 | pbcopy ```
 * Transfer the content from the clipboard to Github Secrets as described above.
 
 # How to demo:
