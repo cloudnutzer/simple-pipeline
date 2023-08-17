@@ -2,7 +2,7 @@
 ## Simple Pipeline
 * Simple pipeline example for demonstration purposes
 
-<img src="media/simple-pipeline-secrets-vars.png"/>
+<img src="media/github-simple-pipeline-demo-flow.png"/>
 
 ## Prerequisites
 * Docker Hub Registry or another registry to store or retrieve the built container image
