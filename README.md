@@ -4,6 +4,11 @@
 
 <img src="media/github-simple-pipeline-demo-flow.png"/>
 
+1. Developer writes some code in VSCode - In our example the index.html file
+2. In the second step the developer commits his changes "git commit" and pushes them to Github (VCS / SCM). Our Pipeline will be triggered
+3. One step of the pipeline is building an image based on our changes we made in the index.html and pushes the image to Docker Registry automatically - Continious Integration
+4. In the fourth step the pipeline deploys our new image with the newest version of index.html to an AKS Cluster (Kubernetes Cluster in Azure) automatically - Continious Delivery
+
 ## Prerequisites
 * Docker Hub Registry or another registry to store or retrieve the built container image
 * I have deployed an AKS cluster in Azure
