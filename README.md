@@ -2,6 +2,8 @@
 ## Simple Pipeline
 * Simple pipeline example for demonstration purposes
 
+<img src="media/simple-pipeline-secrets-vars.png"/>
+
 ## Prerequisites
 * Docker Hub Registry or another registry to store or retrieve the built container image
 * I have deployed an AKS cluster in Azure
